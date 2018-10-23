@@ -8,4 +8,4 @@ sudo chef-server-ctl user-create admin Admin User admin@local.com 'PASSWORD' --f
 sudo chef-server-ctl org-create student 'Student App' --association_user admin --filename /opt/student.pem 
 sudo chef-server-ctl install chef-manage
 sudo chef-server-ctl reconfigure
-sudo chef-manage-ctl reconfigure
+sudo chef-manage-ctl reconfigure --accept-license
