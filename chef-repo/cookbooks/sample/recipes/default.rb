@@ -6,4 +6,17 @@
 
 puts "Hello World"
 
-package 'httpd'
+#package 'httpd'
+
+user  'user add ' do 
+  comment 'sample'
+  shell       '/bin/bash'
+  username    'test'
+  home	      '/home/test'
+  manage_home true
+end
+
+log 'message' do
+  message "#{node['sample']['curl']}"
+  level :fatal
+end
