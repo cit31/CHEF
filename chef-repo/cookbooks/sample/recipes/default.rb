@@ -20,3 +20,7 @@ log 'message' do
   message "#{node['sample']['curl']}"
   level :fatal
 end
+
+template '/tmp/sample' do 
+  source 'sample.erb'
+end

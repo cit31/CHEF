@@ -41,3 +41,57 @@ remote_file 'Downloading Apache Tomcat' do
     group   "#{node['stack']['appuser']}"
     action  :create
 end
+
+execute 'Extract Tomcat tar file' do
+    command     "tar xzvf #{node['stack']['tarpath']}"
+    cwd         "#{node['stack']['apphomedir']}"
+    user        "#{node['stack']['appuser']}"
+    group       "#{node['stack']['appuser']}"
+    #not_if      { File.exists?("/file/contained/in/tar/here") }
+end
+
+Dir["#{node['stack']['tomcatdir']}/webapps/*"].each do |file_name|
+    if File.directory?(file_name)
+        directory "Removing Directory #{file_name}" do
+            path        "#{file_name}"  
+            recursive   true  
+            action      :delete
+        end
+    elsif File.file?(file_name)
+        file "Removing Files #{file_name}" do
+            path        "#{file_name}"  
+            action      :delete
+        end
+    end
+end
+
+remote_file 'Downloading JDBC Jar file' do
+    source  "#{node['stack']['jdbc_url']}"
+    path    "#{node['stack']['tomcatdir']}/lib/#{node['stack']['jdbc_file']}"
+    owner   "#{node['stack']['appuser']}"
+    group   "#{node['stack']['appuser']}"
+    action  :create
+end
+
+template "Update context.xml with JDBC Connection" do 
+    path    "#{node['stack']['tomcatdir']}/conf/context.xml"
+    source  "context.xml.erb"
+    owner   "#{node['stack']['appuser']}"
+    group   "#{node['stack']['appuser']}"
+    action  :create
+end
+
+template "Update tomcat init script" do 
+    path    "/etc/init.d/tomcat"
+    source  "tomcat-init.erb"
+    action  :create
+end
+
+execute 'Extract Tomcat tar file' do
+    command     "systemctl daemon-reload"
+end
+
+service "Start tomcat" do 
+    service_name    "tomcat"
+    action          [:start, :enable]
+end
