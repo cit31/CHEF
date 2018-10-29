@@ -84,6 +84,7 @@ end
 template "Update tomcat init script" do 
     path    "/etc/init.d/tomcat"
     source  "tomcat-init.erb"
+    mode    0755
     action  :create
 end
 

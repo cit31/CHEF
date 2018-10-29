@@ -6,4 +6,4 @@ default['stack']['tarpath']="#{node['stack']['apphomedir']}/#{node['stack']['tar
 default['stack']['tomcatdir']="#{node['stack']['tarpath']}".gsub('.tar.gz','')
 default['stack']['jdbc_url']="https://github.com/cit31/project-1/raw/master/mysql-connector-java-5.1.40.jar"
 default['stack']['jdbc_file']="#{node['stack']['jdbc_url']}".split('/').last
-
+default['stack']['DBIP']="#{node['ipaddress']}"
